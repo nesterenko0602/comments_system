@@ -1,0 +1,32 @@
+<!doctype html>
+<html ng-app="app">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Система комментирования</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./build/styles.css">
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">Ваш браузер <strong>безнадёжно устарел</strong>! Пожалуйста, <a href="http://browsehappy.com/">обновите свой браузер</a> для увеличения скорости работы.</p>
+        <![endif]-->
+        <div class="container">
+            <div class="row">
+                <div class="two columns">&nbsp;</div>
+                <div class="eight columns">
+                    <div ng-include="'./components/mainView.html'"></div>
+                </div>
+            </div>
+            <footer>
+                <div class="row">
+                    <div class="twelve columns">
+                        Разработано <a href="mailto:nesterenko0602@gmail.com" target="blank">nesterenko0602@gmail.com</a> для <a href="https://rambler-co.ru/" target="blank">Rambler&Co</a>                        
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script src="./build/bundle.js"></script>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<div id="comment_{{ comment.id }}" class="comment {{ !comment.parent_id ? 'comment--root' : '' }}">
+	<div class="comment__body {{ comment.reply.enable && 'comment__body--active' || ''}}">
+	    <div class="comment__author">{{comment.author}}</div>
+	    <div class="comment__date">{{comment.date | date:'HH:mm, dd MMMM yyyy'}}</div>
+	    <div class="comment__textWrapper">
+	    	<div ng-if="!comment.edit_mode" class="comment__text">{{comment.text}}</div>
+	    	<div ng-if="comment.edit_mode">
+				<textarea ng-model="comment.editable_text" ng-init="comment.editable_text = comment.text" ng-model="comment.editable_text" class="u-full-width comment__textarea" placeholder=""></textarea>
+	    	</div>
+	    </div>
+	    <div ng-if="comment.edit_mode" class="comment__editActions">
+	    	<button ng-click="finish_editing(true)" class="button-primary button-small">Сохранить</button>
+			<button ng-click="finish_editing()" class="button-small">Отменить</button>
+	    </div>
+	    <div class="comment__actions" ng-if="!comment.edit_mode">
+	    	<div class="comment__action comment__replyClose" ng-if="comment.reply.enable" ng-click="toggle_reply()">Закрыть</div>
+	    	<div class="comment__action comment__reply" ng-if="!comment.reply.enable" ng-click="toggle_reply()">Ответить</div>
+	    	<div class="comment__action comment__remove" ng-if="!comment.reply.enable" ng-click="remove_tree()">Удалить</div>
+	    	<div class="comment__action comment__edit" ng-if="!comment.reply.enable" ng-click="edit_comment()">Изменить</div>
+	    </div>
+	</div>
+    <div class="comment__childComments" ng-init="parent_id=comment.id">
+    	<div ng-include="'./components/addCommentView.html'" ng-if="comment.reply.enable"></div>
+    	<div class="commentWrapper" ng-include="'./components/commentView.html'" 
+    		ng-repeat="comment in comments | filter: { parent_id: comment.id } | orderBy: 'date' track by comment.id"></div>
+    </div>
+</div>

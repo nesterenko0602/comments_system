@@ -1,0 +1,13 @@
+<form class="addComment {{parent_id && 'addComment--reply'}}" ng-init="model = parent_id && comment.reply || new_comment">
+    <div class="addComment__inputBlock">
+    	<label for="nameInput">Ваше имя</label>
+	    <input ng-model="model.author" ng-model-options="{ updateOn: 'blur' }" class="u-full-width {{model.error.author ? 'error' : ''}}" type="text" id="nameInput">
+	    <div class="addComment__errorLabel" ng-if="model.error.author">Поле не заполнено</div>
+  	</div>
+  	<div class="addComment__inputBlock">
+	    <label for="new_comment">Комментарий</label>
+	    <textarea ng-model="model.text" ng-model-options="{ updateOn: 'blur' }" class="u-full-width {{model.error.text ? 'error' : ''}}" placeholder="" id="new_comment"></textarea>
+	    <div class="addComment__errorLabel" ng-if="model.error.text">Поле не заполнено</div>
+	</div>
+    <button ng-click="add_new_comment()" class="button-primary">{{parent_id && 'Ответить' || 'Добавить'}}</button>
+</form>
