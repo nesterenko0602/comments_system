@@ -2,7 +2,7 @@
 <div ng-controller="mainController">
     <div ng-include="'./components/addCommentView.html'" class="addCommentWrapper"></div>
     <div class="commentsWrapper">
-        <div class="commentWrapper" ng-include="'./components/commentView.html'" ng-repeat="comment in comments | filter:{parent_id: '!'} | orderBy: 'date' track by comment.id"></div>
+        <div class="commentWrapper" ng-include="'./components/commentView.html'" ng-repeat="comment in comments | orderBy: 'date' track by comment.id"></div>
         <h5 ng-if="!comments.length">Комментариев нет :(</h5>
     </div>
 </div>

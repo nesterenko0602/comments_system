@@ -7,22 +7,66 @@
 }
 
 // Comments
-.commentsWrapper {
-    margin-bottom: 110px;
-    &>.commentWrapper:last-child {
-        .comment__body {
-            border: 0;
-        }
-    }
-}
+// .commentsWrapper {
+//     margin-bottom: 110px;
+//     &>.commentWrapper:last-child {
+//         .comment__body {
+//             border: 0;
+//         }
+//     }
+// }
 .comment {
-    margin-left: 40px;
-    &.comment--root {
+    // margin-left: 40px;
+    &.comment--deep0 {
         margin-left: 0;
     }
-    .comment__body {
+    &.comment--deep1 {
+        margin-left: 30px;
+    }
+    &.comment--deep2 {
+        margin-left: 60px;
+    }
+    &.comment--deep3 {
+        margin-left: 90px;
+    }
+    &.comment--deep4 {
+        margin-left: 120px;
+    }
+    &.comment--deep5 {
+        margin-left: 150px;
+    }
+    &.comment--deep6 {
+        margin-left: 180px;
+    }
+    &.comment--deep7 {
+        margin-left: 210px;
+    }
+    .comment__container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
         padding: 24px 0 4px;
         border-bottom: 1px solid @grey-lighter;
+    }
+    .comment__avatarContainer {
+        width: 60px;
+        height: 100%;
+        margin-right: 16px;
+    }
+    .comment__avatar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        color: white;
+        font-size: 32px;
+        font-family: "PT Sans";
+    }
+    .comment__body {
+        position: relative;
+        width: 100%;
         &:hover {
             .comment__actions {
                 transition: none;
@@ -39,7 +83,25 @@
     .comment__author {
         display: inline-block;
         font-weight: bold;
+    }
+    .comment__replyFor {
+        position: relative;
+        display: inline-block;
         margin-right: 8px;
+        margin-left: 17px;
+        font-size: 85%;
+        color: @grey;
+        &::before {
+            position: absolute;
+            top: 4px;
+            left: -17px;
+            height: 12px;
+            width: 12px;
+            content: ' ';
+            background-image: url('../img/reply.svg');
+            background-size: contain;
+            transform: scaleX(-1);
+        }
     }
     .comment__date {
         display: inline-block;
@@ -136,20 +198,18 @@
 
 // Add comment form
 .addCommentWrapper {
-    margin-top: 40px;
-    margin-bottom: 40px;
+    width: 100%;
 }
 .addComment {
     position: relative;
     &.addComment--reply {
         padding: 24px 16px 4px;
-        margin-top: 8px;
         background: @grey-lighter;
         border-radius: 2px;
         &::before {
             position: absolute;
             top: -8px;
-            left: 20px;
+            left: 72px;
             content: ' ';
             width: 16px;
             height: 16px;
