@@ -1,32 +1,5 @@
 export default (app) => {
-    app.controller('mainController', ['$scope', '$location', '$anchorScroll', ($scope, $location, $anchorScroll) => {        
-        
-        const buildTree = function(curr_comment) {
-            if (!curr_comment) {
-                let result = [];
-                for(let comment of $scope.comments_flat){
-                    result.push(buildTree(comment));
-                }
-                return result.filter( element => {
-                   return element !== undefined;
-                });
-            } else {
-                let replies = $scope.comments_flat.filter(comment => {
-                    return comment.parent_id == curr_comment.id;
-                });
-
-                for (let reply of replies){
-                    reply.reply_for = curr_comment.author;
-                }
-
-                curr_comment.replies = replies;
-                curr_comment.avatar_color = color_from_string(curr_comment.author);
-
-                if (!curr_comment.parent_id){
-                    return curr_comment;
-                }
-            }
-        }
+    app.controller('mainController', ['$scope', '$location', '$anchorScroll', 'REST', ($scope, $location, $anchorScroll, REST) => {
         
         const color_from_string = function(string){
             const hashCode = function(str) { // java String#hashCode
@@ -63,13 +36,12 @@ export default (app) => {
             return comments;
         }
 
-        $scope.comments_flat = JSON.parse(localStorage.getItem('comments')) || [];
-        $scope.comments = buildTree();
+        $scope.fetching = true;
         $scope.new_comment = {};
-        
         $scope.add_new_comment = function(){
             let new_comment = Object.assign({}, this.model, {
                 id: (Math.random() * 0x10000000000000).toString(16),
+                new: true,
                 date: Date.now()
             });
 
@@ -88,27 +60,37 @@ export default (app) => {
 
             this.model = {};
 
+            // Добавляем цвет кружка
+            new_comment.avatar_color = color_from_string(new_comment.author);
+
             // Если коммент - ответ на другой коммент, задаем parent_id
             this.parent_id && (new_comment.parent_id = this.parent_id);
-            $scope.comments_flat.push(new_comment);
-            $scope.save_to_storage(true);
+            $scope.comments.push(new_comment);
+            REST($scope.comments)
+            .catch(msg => {
+                alert(msg);
+            });
             
             // Скролл вниз
+            this.comment.reply.enable = false;
             if (!this.parent_id) {
                 $location.hash('comment_'+new_comment.id);
                 $anchorScroll();
             }
         }
         $scope.remove_tree = function(){
-            $scope.comments_flat.splice(this.comments_flat.indexOf(this.comment), 1);
-            remove_childs(this.comments_flat, this.comment);
-            $scope.save_to_storage(true);
+            $scope.comments.splice(this.comments.indexOf(this.comment), 1);
+            remove_childs(this.comments, this.comment);
+            REST($scope.comments)
+            .catch(msg => {
+                alert(msg);
+            });
         }
         $scope.toggle_reply = function(){
             // При необходимости можно чистить значения полей при открытии формы
             let current_state = this.comment.reply && this.comment.reply.enable;
             this.comment.reply = {};
-            for(let comment of this.comments_flat){
+            for(let comment of this.comments){
                 !comment.reply && (comment.reply = {});
                 if (comment.id !== this.comment.id) {
                     comment.reply.enable = false;
@@ -122,25 +104,29 @@ export default (app) => {
         $scope.finish_editing = function(save){
             if (save){
                 this.comment.text = this.comment.editable_text;
+                REST($scope.comments)
+                .catch(msg => {
+                    alert(msg);
+                });
             }
 
             delete this.comment.editable_text;
             delete this.comment.edit_mode;
-
-            $scope.save_to_storage();
         }
-        $scope.save_to_storage = function(render){
-            for(let comment of $scope.comments_flat){
-                for(let field of ['edit_mode', 'error', 'reply', 'enable']){
+
+        REST()
+        .then(results => {
+            for(let comment of results) {
+                for(let field of ['edit_mode', 'new', 'error', 'reply', 'enable']) {
                     delete comment[field];
                 }
             }
-            localStorage.setItem('comments', JSON.stringify($scope.comments_flat));
-            if (render){
-                $scope.comments = buildTree();
-            }
-            return true;
-        }
+            $scope.comments = results;
+            $scope.fetching = false;
+        })
+        .catch(msg => {
+            alert(msg);
+        });
         
     }]);
 }

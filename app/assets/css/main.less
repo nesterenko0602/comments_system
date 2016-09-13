@@ -15,6 +15,20 @@
 //         }
 //     }
 // }
+
+.loader{
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    padding: 1em;
+    margin: 0 auto 1em;
+    display: inline-block;
+    vertical-align: top;
+    svg path, svg rect {
+        fill: #33C3F0;
+    }
+}
+
 .comment {
     // margin-left: 40px;
     &.comment--deep0 {
@@ -40,6 +54,10 @@
     }
     &.comment--deep7 {
         margin-left: 210px;
+    }
+    &.comment--new {
+        pointer-events: none;
+        opacity: .5;
     }
     .comment__container {
         display: flex;

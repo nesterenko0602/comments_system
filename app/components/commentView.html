@@ -1,5 +1,5 @@
-<div id="comment_{{ comment.id }}" class="comment comment--deep{{ (deep-1) < 8 ? (deep-1) : 7 }}" 
-	ng-init="deep=deep+1;">
+<div id="comment_{{ comment.id }}" ng-class="{'comment--new': comment.new}" class="comment comment--deep{{ (deep-1) < 8 ? (deep-1) : 7 }}" 
+	ng-init="deep=deep+1">
 	<div class="comment__container">
 		<div class="comment__avatarContainer">
 			<div class="comment__avatar" style="background-color:#{{comment.avatar_color}}">{{comment.author[0] | uppercase}}</div>
@@ -32,4 +32,4 @@
 </div>
 <div class="commentWrapper"
 	ng-include="'./components/commentView.html'" 
-	ng-repeat="comment in comment.replies | orderBy: 'date' track by comment.id"></div>
+	ng-repeat="comment in comments | filter: { parent_id: comment.id } | orderBy: 'date' track by comment.id"></div>
