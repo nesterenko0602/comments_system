@@ -4,7 +4,7 @@
 		<div class="comment__avatarContainer">
 			<div class="comment__avatar" style="background-color:#{{comment.avatar_color}}">{{comment.author[0] | uppercase}}</div>
 		</div>
-		<div class="comment__body {{ comment.reply.enable && 'comment__body--active' || ''}}">
+		<div class="comment__body {{ comment.reply && 'comment__body--active' || ''}}">
 		    <div class="comment__author">{{comment.author}}</div>
 		    <div class="comment__replyFor" ng-if="comment.reply_for">{{ comment.reply_for ? comment.reply_for : '' }}</div>
 		    <div class="comment__date">{{comment.date | date:'HH:mm, dd MMMM yyyy'}}</div>
@@ -19,15 +19,15 @@
 				<button ng-click="finish_editing()" class="button-small">Отменить</button>
 		    </div>
 		    <div class="comment__actions" ng-if="!comment.edit_mode">
-		    	<div class="comment__action comment__replyClose" ng-if="comment.reply.enable" ng-click="toggle_reply()">Закрыть</div>
-		    	<div class="comment__action comment__reply" ng-if="!comment.reply.enable" ng-click="toggle_reply()">Ответить</div>
-		    	<div class="comment__action comment__remove" ng-if="!comment.reply.enable" ng-click="remove_tree()">Удалить</div>
-		    	<div class="comment__action comment__edit" ng-if="!comment.reply.enable" ng-click="edit_comment()">Изменить</div>
+		    	<div class="comment__action comment__replyClose" ng-if="comment.reply" ng-click="toggle_reply()">Закрыть</div>
+		    	<div class="comment__action comment__reply" ng-if="!comment.reply" ng-click="toggle_reply()">Ответить</div>
+		    	<div class="comment__action comment__remove" ng-if="!comment.reply" ng-click="remove_tree()">Удалить</div>
+		    	<div class="comment__action comment__edit" ng-if="!comment.reply" ng-click="edit_comment()">Изменить</div>
 		    </div>
 		</div>
 	</div>
 	<div ng-init="parent_id=comment.id" class="addCommentWrapper">
-		<div ng-include="'./components/addCommentView.html'" ng-if="comment.reply.enable"></div>
+		<div ng-include="'./components/addCommentView.html'" ng-if="comment.reply"></div>
 	</div>
 </div>
 <div class="commentWrapper"

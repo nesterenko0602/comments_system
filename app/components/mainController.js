@@ -37,7 +37,6 @@ export default (app) => {
         }
 
         $scope.fetching = true;
-        $scope.new_comment = {};
         $scope.add_new_comment = function(){
             let new_comment = Object.assign({}, this.model, {
                 id: (Math.random() * 0x10000000000000).toString(16),
@@ -66,37 +65,34 @@ export default (app) => {
             // Если коммент - ответ на другой коммент, задаем parent_id
             this.parent_id && (new_comment.parent_id = this.parent_id);
             $scope.comments.push(new_comment);
-            REST($scope.comments)
+            REST.set($scope.comments)
             .catch(msg => {
                 alert(msg);
             });
             
             // Скролл вниз
-            this.comment.reply.enable = false;
+            this.comment && (this.comment.reply = false);
             if (!this.parent_id) {
                 $location.hash('comment_'+new_comment.id);
                 $anchorScroll();
             }
         }
         $scope.remove_tree = function(){
-            $scope.comments.splice(this.comments.indexOf(this.comment), 1);
-            remove_childs(this.comments, this.comment);
-            REST($scope.comments)
+            $scope.comments.splice($scope.comments.indexOf(this.comment), 1);
+            remove_childs($scope.comments, this.comment);
+            REST.set($scope.comments)
             .catch(msg => {
                 alert(msg);
             });
         }
         $scope.toggle_reply = function(){
-            // При необходимости можно чистить значения полей при открытии формы
-            let current_state = this.comment.reply && this.comment.reply.enable;
-            this.comment.reply = {};
-            for(let comment of this.comments){
-                !comment.reply && (comment.reply = {});
+            let current_state = this.comment.reply;
+            for(let comment of $scope.comments){
                 if (comment.id !== this.comment.id) {
-                    comment.reply.enable = false;
+                    comment.reply = false;
                 }
             }
-            this.comment.reply.enable = !current_state;
+            this.comment.reply = !current_state;
         }
         $scope.edit_comment = function(){
             this.comment.edit_mode = true;
@@ -104,7 +100,7 @@ export default (app) => {
         $scope.finish_editing = function(save){
             if (save){
                 this.comment.text = this.comment.editable_text;
-                REST($scope.comments)
+                REST.set($scope.comments)
                 .catch(msg => {
                     alert(msg);
                 });
@@ -114,7 +110,7 @@ export default (app) => {
             delete this.comment.edit_mode;
         }
 
-        REST()
+        REST.get()
         .then(results => {
             for(let comment of results) {
                 for(let field of ['edit_mode', 'new', 'error', 'reply', 'enable']) {

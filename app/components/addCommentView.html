@@ -1,4 +1,4 @@
-<form class="addComment {{parent_id && 'addComment--reply'}}" ng-init="model = parent_id && comment.reply || new_comment">
+<form class="addComment {{parent_id && 'addComment--reply'}}" ng-init="model = {}">
     <div class="addComment__inputBlock">
     	<label for="nameInput">Ваше имя</label>
 	    <input ng-model="model.author" ng-model-options="{ updateOn: 'blur' }" class="u-full-width {{model.error.author ? 'error' : ''}}" type="text" id="nameInput">

@@ -2,12 +2,10 @@ export default (app) => {
 
     app.factory('REST', ['$timeout', '$q', ($timeout, $q) => {
         
-        return new_data => {
-            debugger
-            var deferred = $q.defer();
-
-            $timeout(function() {
-                if (!new_data) {
+        return {
+            get: () => {
+                var deferred = $q.defer();
+                $timeout(function() {
                     try {
                         let data = JSON.parse(localStorage.getItem('comments')) || [];
                         deferred.resolve(data);
@@ -15,10 +13,17 @@ export default (app) => {
                         deferred.reject(new Error("Ошибка чтения данных", e.message));
                     }
                     return;
-                } else {
+                }, 2 * 1000);
+
+                return deferred.promise;
+            },
+            set: (new_data) => {
+                var deferred = $q.defer();
+
+                $timeout(function() {
                     try {
                         for(let comment of new_data) {
-                            comment['new'] && delete comment['new'];
+                            comment.new && delete comment.new;
                         }
                         localStorage.setItem('comments', JSON.stringify(new_data));
                         deferred.resolve(new_data);
@@ -26,10 +31,10 @@ export default (app) => {
                         deferred.reject(new Error("Ошибка записи данных", e.message));
                     }
                     return;
-                }
-            }, 2 * 1000)
+                }, 2 * 1000);
 
-            return deferred.promise;
+                return deferred.promise;
+            }
         }
     }])
 }
